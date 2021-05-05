@@ -1,0 +1,25 @@
+{
+  "name": "moodle-medigiviewer-atto-plugin",
+  "version": "0.0.1",
+  "description": "Atto Editor Plugin for MEDigi Viewer",
+  "main": "index.js",
+  "scripts": {
+    "build": "cd yui/src && node ../../node_modules/shifter/bin/shifter --watch --no-lint",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "moodle",
+    "atto",
+    "medigiviewer"
+  ],
+  "author": "Sampsa Lohi",
+  "license": "MIT",
+  "devDependencies": {
+    "grunt": "^1.4.0",
+    "grunt-cli": "^1.4.2",
+    "grunt-contrib-less": "^3.0.0",
+    "grunt-contrib-watch": "^1.1.0",
+    "grunt-load-gruntfile": "^0.0.2",
+    "shifter": "^0.4.6"
+  }
+}

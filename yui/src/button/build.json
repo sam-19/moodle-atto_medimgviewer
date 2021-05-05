@@ -1,0 +1,10 @@
+{
+    "name": "moodle-atto_medigiviewer-button",
+    "builds": {
+        "moodle-atto_medigiviewer-button": {
+            "jsfiles": [
+                "button.js"
+            ]
+        }
+    }
+}
