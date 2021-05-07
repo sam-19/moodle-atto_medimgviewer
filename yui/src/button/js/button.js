@@ -13,7 +13,7 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-/** MEDIGI VIEWER TINYMCE EDITOR PLUGIN
+/** MEDIGI VIEWER ATTO EDITOR PLUGIN
  * @package    medigi-viewer
  * @copyright  2021 Sampsa Lohi
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
@@ -47,10 +47,10 @@ var COMPONENTNAME = 'atto_medigiviewer',
                     '<span id="medigi-viewer-editor-insert" style="' + STYLES.LINK + '">{{get_string "dialog:insert" component}}</span>' +
                 '</div>' +
             '</div>' +
+            '<textarea id="medigi-viewer-editor-path-copy" style="display:none"></textarea>' +
             '<div id="medigi-viewer-editor-file-browser" style="' + STYLES.BROWSER + '" data-path="/">{{get_string "dialog:loading" component}}</div>' +
         '</div>' +
     '{{/if}}';
-
 
 Y.namespace('M.atto_medigiviewer').Button = Y.Base.create('button', Y.M.editor_atto.EditorPlugin, [], {
     /**
@@ -107,6 +107,7 @@ Y.namespace('M.atto_medigiviewer').Button = Y.Base.create('button', Y.M.editor_a
         // Fetch current file tree from the API and display it
         fetch(url).then(function (response) { console.log(response); return response.json() }).then(function (data) {
             var fileBrowser = document.getElementById('medigi-viewer-editor-file-browser'),
+                pathCopy = document.getElementById('medigi-viewer-editor-path-copy'),
                 pathDisplay = document.getElementById('medigi-viewer-editor-path-display');
             if ($.isEmptyObject(data.subdirs) && !data.files.length) {
                 // File area is empty
@@ -176,6 +177,7 @@ Y.namespace('M.atto_medigiviewer').Button = Y.Base.create('button', Y.M.editor_a
                     row.dataset.path = filePath;
                     row.onclick = function () {
                         pathDisplay.innerText = filePath;
+                        pathCopy.value = filePath;
                     }
                     applyIndent(row, level);
                     icon = document.createElement('i');
@@ -198,6 +200,7 @@ Y.namespace('M.atto_medigiviewer').Button = Y.Base.create('button', Y.M.editor_a
                     row.dataset.open = 0;
                     row.onclick = function () {
                         pathDisplay.innerText = dirPath;
+                        pathCopy.value = dirPath;
                     }
                     row.ondblclick = function () {
                         toggleDirectory(dirPath);
@@ -217,6 +220,42 @@ Y.namespace('M.atto_medigiviewer').Button = Y.Base.create('button', Y.M.editor_a
             }
             parseDir(data, 0, '/');
         });
+    },
+    _copyPathToClipboard: function (e) {
+        var pathEl = document.getElementById('medigi-viewer-editor-path-copy'),
+            area = this.get('area');
+        if (!pathEl.value) {
+            console.warn('Path is empty, nothing to copy.');
+            return;
+        }
+        const filePath = M.cfg.wwwroot +
+                        '/draftfile.php/' + area.usercontextid + '/user/draft/' + area.itemid +
+                        pathEl.value + ':' + area.filtertag;
+        if (navigator.clipboard) {
+            navigator.clipboard.writeText(filePath).then(function() {
+                console.log('Path copied to clipboard.');
+            }, function(err) {
+                console.error('Copying path to clipboard failed!', err);
+            })
+            return;
+        }
+        // Try to use fallback
+        const orig = pathEl.value;
+        pathEl.value = filePath;
+        pathEl.focus();
+        pathEl.select();
+        try {
+            var successful = document.execCommand('copy');
+            if (successful) {
+                console.log('Path copied to clipboard.');
+            } else {
+                console.error('Copying path to clipboard failed!');
+            }
+        } catch (err) {
+            console.error('Copying path to clipboard failed!', err);
+        }
+        pathEl.value = orig;
+        pathEl.blur();
     },
     /**
      * Display file area browser.
@@ -242,10 +281,6 @@ Y.namespace('M.atto_medigiviewer').Button = Y.Base.create('button', Y.M.editor_a
         this._resolveAnchors();
         dialogue.show();
         this._buildFileTree()
-        this._content.one('#medigi-viewer-editor-insert').on('click', function(e) {
-            e.preventDefault();
-            this._setLinkOnSelection();
-        }, this);
             //iframe = Y.Node.create('<iframe name="medigiviewerdialog"></iframe>');
         // We set the height here because otherwise it is really small. That might not look
         // very nice on mobile devices, but we considered that enough for now.
@@ -279,10 +314,9 @@ Y.namespace('M.atto_medigiviewer').Button = Y.Base.create('button', Y.M.editor_a
             filetree: this.get('filetree'),
             itemid: this.get('itemid'),
         })
-            //canShowFilepicker = this.get('host').canShowFilepicker('medigiviewer'),
-
         this._content = Y.Node.create(compiled);
-        this._content.one('#medigi-viewer-editor-insert').on('click', this._setLink, this);
+        this._content.one('#medigi-viewer-editor-copy').on('click', this._copyPathToClipboard, this);
+        this._content.one('#medigi-viewer-editor-insert').on('click', this._setLinkOnSelection, this);
         //if (canShowFilepicker) {
             // Populate the file tree
         //}
@@ -315,7 +349,7 @@ Y.namespace('M.atto_medigiviewer').Button = Y.Base.create('button', Y.M.editor_a
             }
         }
     },
-    // Below methods have been directly taken from the Atto Link plugin (c) Damyon Wiese
+    // Below methods have been taken pretty much directly from the Atto Link plugin (c) Damyon Wiese
     /**
      * Final step setting the anchor on the selection.
      *
@@ -324,7 +358,9 @@ Y.namespace('M.atto_medigiviewer').Button = Y.Base.create('button', Y.M.editor_a
      * @param  {String} url URL the link will point to.
      * @return {Node} The added Node.
      */
-     _setLinkOnSelection: function () {
+    _setLinkOnSelection: function () {
+        // NOTE! This method raises an error ("Maximum call stack exceeded."), which should be resolved
+        // in the near future: https://tracker.moodle.org/browse/MDL-69292
         var host = this.get('host'),
             area = this.get('area'),
             url = M.cfg.wwwroot +
@@ -340,18 +376,15 @@ Y.namespace('M.atto_medigiviewer').Button = Y.Base.create('button', Y.M.editor_a
             // Firefox cannot add links when the selection is empty so we will add it manually.
             link = Y.Node.create('<a>' + url + '</a>');
             link.setAttribute('href', url);
-
             // Add the node and select it to replicate the behaviour of execCommand.
             selectednode = host.insertContentAtFocusPoint(link.get('outerHTML'));
             host.setSelection(host.getSelectionFromNode(selectednode));
         } else {
             document.execCommand('unlink', false, null);
             document.execCommand('createLink', false, url);
-
             // Now set the target.
             selectednode = host.getSelectionParentNode();
         }
-
         // Note this is a document fragment and YUI doesn't like them.
         if (!selectednode) {
             return;
@@ -371,12 +404,10 @@ Y.namespace('M.atto_medigiviewer').Button = Y.Base.create('button', Y.M.editor_a
     _findSelectedAnchors: function (node) {
         var tagname = node.get('tagName'),
             hit, hits;
-
         // Direct hit.
         if (tagname && tagname.toLowerCase() === 'a') {
             return [node];
         }
-
         // Search down but check that each node is part of the selection.
         hits = [];
         node.all('a').each(function(n) {
