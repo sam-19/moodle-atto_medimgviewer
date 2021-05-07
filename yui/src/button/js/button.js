@@ -28,9 +28,7 @@
 var COMPONENTNAME = 'atto_medigiviewer',
     CSS = { },
     LOGNAME = 'atto_medigiviewer',
-    SELECTORS = {
-
-    },
+    SELECTORS = { },
     STYLES = {
         BROWSER: "height: 600px; width: 600px; overflow: auto; padding: 5px;",
         CONTROLS: "wdith: 100px; padding: 10px; float: left;",
@@ -49,7 +47,7 @@ var COMPONENTNAME = 'atto_medigiviewer',
                     '<span id="medigi-viewer-editor-insert" style="' + STYLES.LINK + '">{{get_string "dialog:insert" component}}</span>' +
                 '</div>' +
             '</div>' +
-            '<div id="medigi-viewer-editor-file-browser" style="' + STYLES.BROWSER + '">{{get_string "dialog:loading" component}}</div>' +
+            '<div id="medigi-viewer-editor-file-browser" style="' + STYLES.BROWSER + '" data-path="/">{{get_string "dialog:loading" component}}</div>' +
         '</div>' +
     '{{/if}}';
 
@@ -128,14 +126,54 @@ Y.namespace('M.atto_medigiviewer').Button = Y.Base.create('button', Y.M.editor_a
                             indent.style.width = "calc(16px + 0.5rem)";
                             el.appendChild(indent);
                         }
+                    },
+                    toggleDirectory = function (dirPath) {
+                        var isOpen;
+                        document.querySelector("#medigi-viewer-editor-file-browser")
+                        .childNodes.forEach(function (child) {
+                            // This operation must be run twice
+                            if (child.dataset.path && child.dataset.path === dirPath) {
+                                if (parseInt(child.dataset.open)) {
+                                    isOpen = true;
+                                } else {
+                                    isOpen = false;
+                                }
+                                child.dataset.open = isOpen ? 0 : 1;
+                                return;
+                            }
+                        })
+                        document.querySelector("#medigi-viewer-editor-file-browser")
+                        .childNodes.forEach(function (child) {
+                            if (child.dataset.path) {
+                                const curPath = child.dataset.path;
+                                if (curPath.startsWith(dirPath) && curPath.length > dirPath.length) {
+                                    if (curPath.substring(dirPath.length, curPath.length - 1).indexOf('/') === -1) {
+                                        // Node is either a subdirectory or file inside the given dir
+                                        if (isOpen) {
+                                            child.style.height = '0';
+                                            if (child.dataset.open !== undefined) {
+                                                child.dataset.open = 0;
+                                            }
+                                        } else {
+                                            child.style.height = '1.5em';
+                                        }
+                                    } else if (isOpen) {
+                                        // Close also all items in deeper subdirectories
+                                        child.style.height = '0';
+                                    }
+                                }
+                            }
+                        })
                     };
                 for (file in dir.files) {
                     // Shifter's default linter won't allow const, so the linter must be disabled
                     const filePath = path + file;
                     row = document.createElement('div');
-                    row.style.height = "1.5em";
-                    row.style.lineHeight = "1.5em";
-                    row.style.cursor = "pointer";
+                    row.style.height = level ? '0' : '1.5em'; // Display root items, hide others
+                    row.style.lineHeight = '1.5em';
+                    row.style.cursor = 'pointer';
+                    row.style.overflow = 'hidden';
+                    row.dataset.path = filePath;
                     row.onclick = function () {
                         pathDisplay.innerText = filePath;
                     }
@@ -152,11 +190,17 @@ Y.namespace('M.atto_medigiviewer').Button = Y.Base.create('button', Y.M.editor_a
                     subdir = dir.subdirs[key];
                     const dirPath = path + key + '/';
                     row = document.createElement('div');
-                    row.style.height = "1.5em";
-                    row.style.lineHeight = "1.5em";
-                    row.style.cursor = "pointer";
+                    row.style.height = level ? '0' : '1.5em';
+                    row.style.lineHeight = '1.5em';
+                    row.style.cursor = 'pointer';
+                    row.style.overflow = 'hidden';
+                    row.dataset.path = dirPath;
+                    row.dataset.open = 0;
                     row.onclick = function () {
                         pathDisplay.innerText = dirPath;
+                    }
+                    row.ondblclick = function () {
+                        toggleDirectory(dirPath);
                     }
                     applyIndent(row, level);
                     icon = document.createElement('i');
@@ -164,6 +208,7 @@ Y.namespace('M.atto_medigiviewer').Button = Y.Base.create('button', Y.M.editor_a
                     icon.style.color = '#1177d1';
                     row.appendChild(icon);
                     content = document.createElement('span');
+                    content.style.userSelect = 'none'; // Prevent text highlighting on double-click
                     content.innerText = key;
                     row.appendChild(content);
                     fileBrowser.appendChild(row);
@@ -234,7 +279,6 @@ Y.namespace('M.atto_medigiviewer').Button = Y.Base.create('button', Y.M.editor_a
             filetree: this.get('filetree'),
             itemid: this.get('itemid'),
         })
-        console.log(compiled)
             //canShowFilepicker = this.get('host').canShowFilepicker('medigiviewer'),
 
         this._content = Y.Node.create(compiled);
