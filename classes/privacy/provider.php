@@ -14,18 +14,18 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-/** MEDIGI VIEWER ATTO EDITOR PLUGIN
- * @package    medigi-viewer
+/** MEDICAL IMAGING VIEWER ATTO EDITOR PLUGIN
+ * @package    medimg-viewer
  * @copyright  2021 Sampsa Lohi
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-namespace atto_medigiviewer\privacy;
+namespace atto_medimgviewer\privacy;
 
 defined('MOODLE_INTERNAL') || die();
 
 /**
- * Privacy Subsystem for atto_medigiviewer implementing null_provider.
+ * Privacy Subsystem for atto_medimgviewer implementing null_provider.
  */
 class provider implements \core_privacy\local\metadata\null_provider {
     /**

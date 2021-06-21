@@ -14,8 +14,8 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-/** MEDIGI VIEWER ATTO EDITOR PLUGIN
- * @package    medigi-viewer
+/** MEDICAL IMAGING VIEWER ATTO EDITOR PLUGIN
+ * @package    medimg-viewer
  * @copyright  2021 Sampsa Lohi
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -52,9 +52,9 @@ if (isguestuser()) {
 }
 // Get area file tree
 $filetree = get_file_storage()->get_area_tree($usercontext->id, 'user', 'draft', $itemid);
-$title = get_string('dialog:title', 'atto_medigiviewer');
+$title = get_string('dialog:title', 'atto_medimgviewer');
 
-$PAGE->set_url('/lib/editor/atto/plugins/medigiviewer/browser.php');
+$PAGE->set_url('/lib/editor/atto/plugins/medimgviewer/browser.php');
 $PAGE->set_title($title);
 $PAGE->set_heading($title);
 $PAGE->set_pagelayout('popup');
@@ -63,32 +63,32 @@ echo $OUTPUT->header();
 $filetree = htmlspecialchars(json_encode($filetree));
 ?>
 
-<div style="display:none" id="medigi-viewer-atto-plugin-filetree"><?php echo $filetree; ?></div>
-<div style="display:none" id="medigi-viewer-atto-plugin-filearea"><?php echo $CFG->wwwroot . '/draftfile.php/' . $usercontext->id . '/user/draft/' . $itemid; ?></div>
+<div style="display:none" id="medimg-viewer-atto-plugin-filetree"><?php echo $filetree; ?></div>
+<div style="display:none" id="medimg-viewer-atto-plugin-filearea"><?php echo $CFG->wwwroot . '/draftfile.php/' . $usercontext->id . '/user/draft/' . $itemid; ?></div>
 
-<div id="medigi-viewer-atto-plugin-path">
-    <div id="medigi-viewer-atto-plugin-path-display">
-        <span><?php echo get_string('dialog:select_file', 'atto_medigiviewer'); ?></span>
+<div id="medimg-viewer-atto-plugin-path">
+    <div id="medimg-viewer-atto-plugin-path-display">
+        <span><?php echo get_string('dialog:select_file', 'atto_medimgviewer'); ?></span>
     </div>
-    <div id="medigi-viewer-atto-plugin-path-controls">
-        <span onclick="medigiViewerCopy()"><?php echo get_string('dialog:copy', 'atto_medigiviewer') ?></span> /
-        <span onclick="medigiViewerInsert()"><?php echo get_string('dialog:insert', 'atto_medigiviewer'); ?></span>
+    <div id="medimg-viewer-atto-plugin-path-controls">
+        <span onclick="medimgViewerCopy()"><?php echo get_string('dialog:copy', 'atto_medimgviewer') ?></span> /
+        <span onclick="medimgViewerInsert()"><?php echo get_string('dialog:insert', 'atto_medimgviewer'); ?></span>
     </div>
 </div>
 
-<div id="medigi-viewer-atto-plugin-file-browser"></div>
+<div id="medimg-viewer-atto-plugin-file-browser"></div>
 
 <script type="text/javascript">
 
 // Load file area tree
-const fileTree = JSON.parse(document.getElementById('medigi-viewer-atto-plugin-filetree').innerText)
-const fileBrowser = document.getElementById('medigi-viewer-atto-plugin-file-browser')
-const pathDisplay = document.getElementById('medigi-viewer-atto-plugin-path-display')
-const fileareaPath = document.getElementById('medigi-viewer-atto-plugin-filearea').innerText
-const suffix = '#medigi-viewer-resource'
-const dirClass = 'medigi-viewer-atto-plugin-dir-row'
-const fileClass = 'medigi-viewer-atto-plugin-file-row'
-const indentClass = 'medigi-viewer-atto-plugin-level-indent'
+const fileTree = JSON.parse(document.getElementById('medimg-viewer-atto-plugin-filetree').innerText)
+const fileBrowser = document.getElementById('medimg-viewer-atto-plugin-file-browser')
+const pathDisplay = document.getElementById('medimg-viewer-atto-plugin-path-display')
+const fileareaPath = document.getElementById('medimg-viewer-atto-plugin-filearea').innerText
+const suffix = '#medimg-viewer-resource'
+const dirClass = 'medimg-viewer-atto-plugin-dir-row'
+const fileClass = 'medimg-viewer-atto-plugin-file-row'
+const indentClass = 'medimg-viewer-atto-plugin-level-indent'
 let firstSelected = false
 const parseDir = (dir, level, path) => {
     if (!dir) {
@@ -139,13 +139,13 @@ const parseDir = (dir, level, path) => {
     }
 }
 parseDir(fileTree, 0, '/')
-const medigiViewerCopy = () => {
+const medimgViewerCopy = () => {
     if (!firstSelected) {
         return
     }
     console.log("copy", fileareaPath + pathDisplay.innerText + suffix)
 }
-const medigiViewerInsert = () => {
+const medimgViewerInsert = () => {
     if (!firstSelected) {
         return
     }
@@ -155,11 +155,11 @@ const medigiViewerInsert = () => {
 </script>
 
 <style>
-.medigi-viewer-atto-plugin-dir-row,
-.medigi-viewer-atto-plugin-file-row {
+.medimg-viewer-atto-plugin-dir-row,
+.medimg-viewer-atto-plugin-file-row {
     cursor: pointer;
 }
-#medigi-viewer-atto-plugin-path {
+#medimg-viewer-atto-plugin-path {
     position: absolute;
     top: -50px;
     left: 15px;
@@ -168,24 +168,24 @@ const medigiViewerInsert = () => {
     border: 1px solid rgba(0, 0, 0, .125);
     margin-bottom: 10px;
 }
-#medigi-viewer-atto-plugin-file-browser {
+#medimg-viewer-atto-plugin-file-browser {
     height: 590px;
     overflow: auto;
 }
-    #medigi-viewer-atto-plugin-path-display > span {
+    #medimg-viewer-atto-plugin-path-display > span {
         font-style: italic;
         opacity: 0.75;
     }
-    #medigi-viewer-atto-plugin-path-controls {
+    #medimg-viewer-atto-plugin-path-controls {
         position: absolute;
         top: 10px;
         right: 10px;
     }
-        #medigi-viewer-atto-plugin-path-controls > span {
+        #medimg-viewer-atto-plugin-path-controls > span {
             cursor: pointer;
             color: #1177d1;
         }
-span.medigi-viewer-atto-plugin-level-indent {
+span.medimg-viewer-atto-plugin-level-indent {
     display: inline-block;
     width: calc(16px + 0.5rem);
 }

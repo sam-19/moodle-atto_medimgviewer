@@ -1,7 +1,7 @@
 {
-  "name": "moodle-medigiviewer-atto-plugin",
+  "name": "moodle-medimgviewer-atto-plugin",
   "version": "0.0.1",
-  "description": "Atto Editor Plugin for MEDigi Viewer",
+  "description": "Atto Editor Plugin for MedImg Viewer",
   "main": "index.js",
   "scripts": {
     "build": "cd yui/src && node ../../node_modules/shifter/bin/shifter --watch --no-lint",
@@ -10,7 +10,7 @@
   "keywords": [
     "moodle",
     "atto",
-    "medigiviewer"
+    "medimgviewer"
   ],
   "author": "Sampsa Lohi",
   "license": "MIT",

@@ -14,8 +14,8 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-/** MEDIGI VIEWER ATTO EDITOR PLUGIN
- * @package    medigi-viewer
+/** MEDICAL IMAGING VIEWER ATTO EDITOR PLUGIN
+ * @package    medimg-viewer
  * @copyright  2021 Sampsa Lohi
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -26,27 +26,27 @@ defined('MOODLE_INTERNAL') || die();
  *
  * @return void
  */
-function atto_medigiviewer_strings_for_js() {
+function atto_medimgviewer_strings_for_js() {
     global $PAGE;
-    $PAGE->requires->strings_for_js(array('medigiviewer',
+    $PAGE->requires->strings_for_js(array('medimgviewer',
                                           'dialog:select_file',
                                           'dialog:insert',
                                           'dialog:copy',
                                     ),
-                                    'atto_medigiviewer');
+                                    'atto_medimgviewer');
 }
 
 /**
  * Return the js params required for this module.
  * @return array of additional params to pass to javascript init function for this module.
  */
-function atto_medigiviewer_params_for_js($elementid, $options, $fpoptions) {
+function atto_medimgviewer_params_for_js($elementid, $options, $fpoptions) {
     global $CFG, $USER;
     require_once($CFG->libdir . '/filestorage/file_storage.php');
     require_once($CFG->dirroot . '/repository/lib.php');  // Load constants.
-    $filtertag = get_config('filter_medigiviewer', 'filtertag');
+    $filtertag = get_config('filter_medimgviewer', 'filtertag');
     if (empty($filtertag)) {
-        // MEDigi Viewer filter is not set up
+        // MedImg Viewer filter is not set up
         return null;
     }
     $usercontext = context_user::instance($USER->id);
@@ -63,7 +63,7 @@ function atto_medigiviewer_params_for_js($elementid, $options, $fpoptions) {
     return $params;
 }
 /*
-function atto_medigiviewer_params_for_js($elementid, $options, $fpoptions) {
+function atto_medimgviewer_params_for_js($elementid, $options, $fpoptions) {
     global $CFG, $USER;
     require_once($CFG->dirroot . '/repository/lib.php');  // Load constants.
     // Disabled if:

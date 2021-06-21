@@ -13,21 +13,21 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-/** MEDIGI VIEWER ATTO EDITOR PLUGIN
- * @package    medigi-viewer
+/** MEDICAL IMAGING VIEWER ATTO EDITOR PLUGIN
+ * @package    medimg-viewer
  * @copyright  2021 Sampsa Lohi
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  *
- * @module moodle-atto-medigiviewer-button
+ * @module moodle-atto-medimgviewer-button
  *
  * @namespace M.atto_link
  * @class button
  * @extends M.editor_atto.EditorPlugin
  */
 
-var COMPONENTNAME = 'atto_medigiviewer',
+var COMPONENTNAME = 'atto_medimgviewer',
     CSS = { },
-    LOGNAME = 'atto_medigiviewer',
+    LOGNAME = 'atto_medimgviewer',
     SELECTORS = { },
     STYLES = {
         BROWSER: "height: 600px; width: 600px; overflow: auto; padding: 5px;",
@@ -37,22 +37,22 @@ var COMPONENTNAME = 'atto_medigiviewer',
         PLACEHOLDER: "font-style: italic; opacity: 0.75;",
     },
     TEMPLATE = '{{#if showFilepicker}}' +
-        '<div id="medigi-viewer-editor">' +
-            '<div id="medigi-viewer-editor-path">' +
-                '<div id="medigi-viewer-editor-path-display" style="' + STYLES.PATH + '">' +
+        '<div id="medimg-viewer-editor">' +
+            '<div id="medimg-viewer-editor-path">' +
+                '<div id="medimg-viewer-editor-path-display" style="' + STYLES.PATH + '">' +
                     '<span style="' + STYLES.PLACEHOLDER + '">{{get_string "dialog:select_file" component}}</span>' +
                 '</div>' +
-                '<div id="medigi-viewer-editor-path-controls" style="' + STYLES.CONTROLS + '">' +
-                    '<span id="medigi-viewer-editor-copy" style="' + STYLES.LINK + '">{{get_string "dialog:copy" component}}</span> / ' +
-                    '<span id="medigi-viewer-editor-insert" style="' + STYLES.LINK + '">{{get_string "dialog:insert" component}}</span>' +
+                '<div id="medimg-viewer-editor-path-controls" style="' + STYLES.CONTROLS + '">' +
+                    '<span id="medimg-viewer-editor-copy" style="' + STYLES.LINK + '">{{get_string "dialog:copy" component}}</span> / ' +
+                    '<span id="medimg-viewer-editor-insert" style="' + STYLES.LINK + '">{{get_string "dialog:insert" component}}</span>' +
                 '</div>' +
             '</div>' +
-            '<textarea id="medigi-viewer-editor-path-copy" style="display:none"></textarea>' +
-            '<div id="medigi-viewer-editor-file-browser" style="' + STYLES.BROWSER + '" data-path="/">{{get_string "dialog:loading" component}}</div>' +
+            '<textarea id="medimg-viewer-editor-path-copy" style="display:none"></textarea>' +
+            '<div id="medimg-viewer-editor-file-browser" style="' + STYLES.BROWSER + '" data-path="/">{{get_string "dialog:loading" component}}</div>' +
         '</div>' +
     '{{/if}}';
 
-Y.namespace('M.atto_medigiviewer').Button = Y.Base.create('button', Y.M.editor_atto.EditorPlugin, [], {
+Y.namespace('M.atto_medimgviewer').Button = Y.Base.create('button', Y.M.editor_atto.EditorPlugin, [], {
     /**
      * A reference to the current selection at the time that the dialogue
      * was opened.
@@ -79,13 +79,13 @@ Y.namespace('M.atto_medigiviewer').Button = Y.Base.create('button', Y.M.editor_a
             area = this.get('area'),
             options = host.get('filepickeroptions');
         if (!area || !area.filtertag) {
-            Y.log('Plugin medigiviewer is not available because MEDigi Viewer filter is not set up!', 'error', LOGNAME);
+            Y.log('Plugin medimgviewer is not available because MedImg Viewer filter is not set up!', 'error', LOGNAME);
             return;
         }
         if (options.image && options.image.itemid) {
             area.itemid = options.image.itemid;
         } else {
-            Y.log('Plugin medigiviewer is not available because itemid is missing.', 'warn', LOGNAME);
+            Y.log('Plugin medimgviewer is not available because itemid is missing.', 'warn', LOGNAME);
             return;
         }
         this.addButton({
@@ -103,15 +103,15 @@ Y.namespace('M.atto_medigiviewer').Button = Y.Base.create('button', Y.M.editor_a
                 this.get('area'),
                 { what: 'filetree' }
             ),
-            url = M.cfg.wwwroot + '/lib/editor/atto/plugins/medigiviewer/api.php?' + Y.QueryString.stringify(args);
+            url = M.cfg.wwwroot + '/lib/editor/atto/plugins/medimgviewer/api.php?' + Y.QueryString.stringify(args);
         // Fetch current file tree from the API and display it
         fetch(url).then(function (response) { console.log(response); return response.json() }).then(function (data) {
-            var fileBrowser = document.getElementById('medigi-viewer-editor-file-browser'),
-                pathCopy = document.getElementById('medigi-viewer-editor-path-copy'),
-                pathDisplay = document.getElementById('medigi-viewer-editor-path-display');
+            var fileBrowser = document.getElementById('medimg-viewer-editor-file-browser'),
+                pathCopy = document.getElementById('medimg-viewer-editor-path-copy'),
+                pathDisplay = document.getElementById('medimg-viewer-editor-path-display');
             if ($.isEmptyObject(data.subdirs) && !data.files.length) {
                 // File area is empty
-                fileBrowser.innerText = M.util.get_string('medigiviewer', 'dialog:no_files');
+                fileBrowser.innerText = M.util.get_string('medimgviewer', 'dialog:no_files');
                 return;
             }
             fileBrowser.innerText = ''; // Clear please wait message
@@ -130,7 +130,7 @@ Y.namespace('M.atto_medigiviewer').Button = Y.Base.create('button', Y.M.editor_a
                     },
                     toggleDirectory = function (dirPath) {
                         var isOpen;
-                        document.querySelector("#medigi-viewer-editor-file-browser")
+                        document.querySelector("#medimg-viewer-editor-file-browser")
                         .childNodes.forEach(function (child) {
                             // This operation must be run twice
                             if (child.dataset.path && child.dataset.path === dirPath) {
@@ -143,7 +143,7 @@ Y.namespace('M.atto_medigiviewer').Button = Y.Base.create('button', Y.M.editor_a
                                 return;
                             }
                         })
-                        document.querySelector("#medigi-viewer-editor-file-browser")
+                        document.querySelector("#medimg-viewer-editor-file-browser")
                         .childNodes.forEach(function (child) {
                             if (child.dataset.path) {
                                 const curPath = child.dataset.path;
@@ -222,7 +222,7 @@ Y.namespace('M.atto_medigiviewer').Button = Y.Base.create('button', Y.M.editor_a
         });
     },
     _copyPathToClipboard: function (e) {
-        var pathEl = document.getElementById('medigi-viewer-editor-path-copy'),
+        var pathEl = document.getElementById('medimg-viewer-editor-path-copy'),
             area = this.get('area');
         if (!pathEl.value) {
             console.warn('Path is empty, nothing to copy.');
@@ -271,7 +271,7 @@ Y.namespace('M.atto_medigiviewer').Button = Y.Base.create('button', Y.M.editor_a
             return;
         }
         var dialogue = this.getDialogue({
-                headerContent: M.util.get_string('medigiviewer', LOGNAME),
+                headerContent: M.util.get_string('medimgviewer', LOGNAME),
                 width: 'auto',
                 focusAfterHide: true
             });
@@ -281,7 +281,7 @@ Y.namespace('M.atto_medigiviewer').Button = Y.Base.create('button', Y.M.editor_a
         this._resolveAnchors();
         dialogue.show();
         this._buildFileTree()
-            //iframe = Y.Node.create('<iframe name="medigiviewerdialog"></iframe>');
+            //iframe = Y.Node.create('<iframe name="medimgviewerdialog"></iframe>');
         // We set the height here because otherwise it is really small. That might not look
         // very nice on mobile devices, but we considered that enough for now.
         //iframe.setStyles({
@@ -292,8 +292,8 @@ Y.namespace('M.atto_medigiviewer').Button = Y.Base.create('button', Y.M.editor_a
         //iframe.setAttribute('src', this._getBrowserURL());
         //console.log(iframe);
         //dialogue.set('bodyContent', iframe).show();
-        //window.medigiviewerdialog.insertLinkCallback = this._setLinkOnSelection;
-        //window.medigiviewerdialog.parentInstance = this;
+        //window.medimgviewerdialog.insertLinkCallback = this._setLinkOnSelection;
+        //window.medimgviewerdialog.parentInstance = this;
         //this.markUpdated();
     },
     /**
@@ -305,7 +305,7 @@ Y.namespace('M.atto_medigiviewer').Button = Y.Base.create('button', Y.M.editor_a
      */
     _getDialogueContent: function() {
         var template = Y.Handlebars.compile(TEMPLATE),
-            canShowFilepicker = this.get('host').canShowFilepicker('link'), // TODO: A dedicated parameter for medigi?
+            canShowFilepicker = this.get('host').canShowFilepicker('link'), // TODO: A dedicated parameter for medimg?
             compiled;
         compiled = template({
             showFilepicker: canShowFilepicker,
@@ -315,8 +315,8 @@ Y.namespace('M.atto_medigiviewer').Button = Y.Base.create('button', Y.M.editor_a
             itemid: this.get('itemid'),
         })
         this._content = Y.Node.create(compiled);
-        this._content.one('#medigi-viewer-editor-copy').on('click', this._copyPathToClipboard, this);
-        this._content.one('#medigi-viewer-editor-insert').on('click', this._setLinkOnSelection, this);
+        this._content.one('#medimg-viewer-editor-copy').on('click', this._copyPathToClipboard, this);
+        this._content.one('#medimg-viewer-editor-insert').on('click', this._setLinkOnSelection, this);
         //if (canShowFilepicker) {
             // Populate the file tree
         //}
@@ -345,7 +345,7 @@ Y.namespace('M.atto_medigiviewer').Button = Y.Base.create('button', Y.M.editor_a
             this._currentSelection = this.get('host').getSelectionFromNode(anchornode);
             url = anchornode.getAttribute('href');
             if (url !== '') {
-                this._content.one('#medigi-viewer-editor-path-display').innerText = url;
+                this._content.one('#medimg-viewer-editor-path-display').innerText = url;
             }
         }
     },
@@ -365,7 +365,7 @@ Y.namespace('M.atto_medigiviewer').Button = Y.Base.create('button', Y.M.editor_a
             area = this.get('area'),
             url = M.cfg.wwwroot +
                   '/draftfile.php/' + area.usercontextid + '/user/draft/' + area.itemid +
-                  document.getElementById('medigi-viewer-editor-path-display').innerText +
+                  document.getElementById('medimg-viewer-editor-path-display').innerText +
                   ':' + area.filtertag,
             link,
             selectednode,

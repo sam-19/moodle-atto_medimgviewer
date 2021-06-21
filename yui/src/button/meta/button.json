@@ -1,5 +1,5 @@
 {
-    "moodle-atto_medigiviewer-button": {
+    "moodle-atto_medimgviewer-button": {
         "requires": [
             "moodle-editor_atto-plugin"
         ]
