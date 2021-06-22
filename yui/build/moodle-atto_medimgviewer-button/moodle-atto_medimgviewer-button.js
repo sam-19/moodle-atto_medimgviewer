@@ -1,3 +1,5 @@
+YUI.add('moodle-atto_medimgviewer-button', function (Y, NAME) {
+
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -79,13 +81,11 @@ Y.namespace('M.atto_medimgviewer').Button = Y.Base.create('button', Y.M.editor_a
             area = this.get('area'),
             options = host.get('filepickeroptions');
         if (!area || !area.filtertag) {
-            Y.log('Plugin medimgviewer is not available because Medical Imaging Viewer filter is not set up!', 'error', LOGNAME);
             return;
         }
         if (options.image && options.image.itemid) {
             area.itemid = options.image.itemid;
         } else {
-            Y.log('Plugin medimgviewer is not available because itemid is missing.', 'warn', LOGNAME);
             return;
         }
         this.addButton({
@@ -439,3 +439,6 @@ Y.namespace('M.atto_medimgviewer').Button = Y.Base.create('button', Y.M.editor_a
         }
     }
 });
+
+
+}, '@VERSION@', {"requires": ["moodle-editor_atto-plugin"]});

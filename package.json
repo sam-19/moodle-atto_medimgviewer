@@ -1,7 +1,7 @@
 {
   "name": "moodle-medimgviewer-atto-plugin",
   "version": "0.0.1",
-  "description": "Atto Editor Plugin for MedImg Viewer",
+  "description": "Atto Editor Plugin for Medical Imaging Study Viewer",
   "main": "index.js",
   "scripts": {
     "build": "cd yui/src && node ../../node_modules/shifter/bin/shifter --watch --no-lint",
