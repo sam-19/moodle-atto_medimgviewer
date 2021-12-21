@@ -1,11 +1,15 @@
 {
   "name": "moodle-medimgviewer-atto-plugin",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "Atto Editor Plugin for Medical Imaging Study Viewer",
   "main": "index.js",
   "scripts": {
     "build": "cd yui/src && node ../../node_modules/shifter/bin/shifter --watch --no-lint",
     "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/sam-19/medimg-viewer-moodle-atto-editor-plugin.git"
   },
   "keywords": [
     "moodle",
