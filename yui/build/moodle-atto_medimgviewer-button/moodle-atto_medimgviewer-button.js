@@ -89,7 +89,7 @@ Y.namespace('M.atto_medimgviewer').Button = Y.Base.create('button', Y.M.editor_a
             return;
         }
         this.addButton({
-            icon: 't/switch_plus',
+            icon: 'icon-final',
             iconComponent: 'atto_medimgviewer',
             callback: this._displayBrowser
         });
