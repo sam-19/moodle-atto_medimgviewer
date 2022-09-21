@@ -114,7 +114,7 @@ Y.namespace('M.atto_medimgviewer').Button = Y.Base.create('button', Y.M.editor_a
                 pathDisplay = document.getElementById('medimg-viewer-editor-path-display');
             if ($.isEmptyObject(data.subdirs) && !data.files.length) {
                 // File area is empty
-                fileBrowser.innerText = M.util.get_string('medimgviewer', 'dialog:no_files');
+                fileBrowser.innerText = M.util.get_string('dialog:no_files', 'atto_medimgviewer');
                 return;
             }
             fileBrowser.innerText = ''; // Clear please wait message
