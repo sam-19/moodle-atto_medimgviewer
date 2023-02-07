@@ -16,8 +16,8 @@ YUI.add('moodle-atto_medimgviewer-button', function (Y, NAME) {
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /** MEDICAL IMAGING STUDY VIEWER ATTO EDITOR PLUGIN
- * @package    medimg-viewer
- * @copyright  2021-2022 Sampsa Lohi & University of Eastern Finland
+ * @package    atto_medimgviewer
+ * @copyright  2021-2023 Sampsa Lohi & University of Eastern Finland
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  *
  * @module moodle-atto-medimgviewer-button

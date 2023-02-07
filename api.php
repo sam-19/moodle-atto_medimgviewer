@@ -15,8 +15,8 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /** MEDICAL IMAGING STUDY VIEWER ATTO EDITOR PLUGIN
- * @package    medimg-viewer
- * @copyright  2021-2022 Sampsa Lohi & University of Eastern Finland
+ * @package    atto_medimgviewer
+ * @copyright  2021-2023 Sampsa Lohi & University of Eastern Finland
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
@@ -44,7 +44,7 @@ if ($context->contextlevel == CONTEXT_MODULE) {
     require_login();
     $PAGE->set_context($context);
 }
-// Guests cannot manage resources
+// Guests cannot manage resources.
 if (isguestuser()) {
     print_error('noguest');
 }

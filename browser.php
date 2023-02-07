@@ -15,8 +15,8 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /** MEDICAL IMAGING STUDY VIEWER ATTO EDITOR PLUGIN
- * @package    medimg-viewer
- * @copyright  2021-2022 Sampsa Lohi & University of Eastern Finland
+ * @package    atto_medimgviewer
+ * @copyright  2021-2023 Sampsa Lohi & University of Eastern Finland
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
@@ -46,11 +46,11 @@ if ($context->contextlevel == CONTEXT_MODULE) {
     require_login();
     $PAGE->set_context($context);
 }
-// Guests cannot manage resources
+// Guests cannot manage resources.
 if (isguestuser()) {
     print_error('noguest');
 }
-// Get area file tree
+// Get area file tree.
 $filetree = get_file_storage()->get_area_tree($usercontext->id, 'user', 'draft', $itemid);
 $title = get_string('dialog:title', 'atto_medimgviewer');
 
@@ -64,7 +64,9 @@ $filetree = htmlspecialchars(json_encode($filetree));
 ?>
 
 <div style="display:none" id="medimg-viewer-atto-plugin-filetree"><?php echo $filetree; ?></div>
-<div style="display:none" id="medimg-viewer-atto-plugin-filearea"><?php echo $CFG->wwwroot . '/draftfile.php/' . $usercontext->id . '/user/draft/' . $itemid; ?></div>
+<div style="display:none" id="medimg-viewer-atto-plugin-filearea"><?php
+    echo $CFG->wwwroot . '/draftfile.php/' . $usercontext->id . '/user/draft/' . $itemid;
+?></div>
 
 <div id="medimg-viewer-atto-plugin-path">
     <div id="medimg-viewer-atto-plugin-path-display">
