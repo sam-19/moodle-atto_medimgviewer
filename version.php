@@ -25,7 +25,7 @@ defined('MOODLE_INTERNAL') || die();
 // Full name of the plugin (used for diagnostics).
 $plugin->component = 'atto_medimgviewer';
 // The current plugin version (Date: YYYYMMDDXX).
-$plugin->version = 2022101002;
+$plugin->version = 2022101003;
 // Required Moodle version.
 $plugin->requires = 2016051900;
 $plugin->maturity = MATURITY_BETA;
